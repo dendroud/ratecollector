@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  
+  postgres:
+    image: postgres:14.5
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=coin
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - ./db/pgsql:/var/lib/postgresql/data
+      - ./dbdumps:/dbdumps
+    ports:
+      - "5432:5432"
+  
+  pgadmin:
+    image: dpage/pgadmin4:6.13
+    container_name: pgadmin4_container
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    volumes:
+      - ./db/pgadmin:/var/lib/pgadmin
+ 
+  php:
+    container_name: php
+    environment:
+      - WORKDIR:/code
+    volumes:
+      - ./code:/code
+      - ./config/php:/usr/local/etc/php      
+    command: tail -F anything
+    build: './docker/php'
+    restart: unless-stopped
+
+ 
+  redis:
+    image: bitnami/redis:latest
+    command: /opt/bitnami/scripts/redis/run.sh --maxmemory 1000mb
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    restart: unless-stopped 
