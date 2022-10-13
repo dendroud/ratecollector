@@ -11,7 +11,7 @@ use Codenixsv\CoinGeckoApi\CoinGeckoClient;
  */
 class CoinGecko extends RateExchange implements RateExchangeService {
 
-    function __construct() {
+    function __construct(array $config = []) {
         $this->currencies = [
             'BTC' => [self::CURR_ID => 'bitcoin', self::CURR_NAME => 'Bitcoin', self::CURR_SYMBOL => 'btc'],
             'ETH' => [self::CURR_ID => 'ethereum', self::CURR_NAME => 'Ethereum', self::CURR_SYMBOL => 'eth'],

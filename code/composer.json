@@ -3,8 +3,7 @@
     "type": "project",
     "require": {
         "ext-pgsql": "*",
-        "codenix-sv/coingecko-api": "dev-master",
-        "cryptoapis/sdk": "^1.7.0"
+        "codenix-sv/coingecko-api": "dev-master"
     },
     "autoload": {
         "psr-4": {

@@ -51,7 +51,7 @@ class RateProcessor {
     }
 
     public function processRates(): bool {
-        $endpoints = Config::getApis();
+        $endpoints = Config::getApis();        
         
         $this->cacheConnect();
         
@@ -93,10 +93,11 @@ class RateProcessor {
     }
 
     public function processRate(string $apiName, array $config, array $pair): float|bool {
-        echo "Request rate for {$pair[0]}, {$pair[1]}" . PHP_EOL;
+        echo "Request rate for {$pair[0]}, {$pair[1]} in {$config['class_name']}" . PHP_EOL;
+        
         try {
             $className = $config['class_name'];
-            $rateService = new $className();
+            $rateService = new $className($config);
             $rateGetter = new RateGetter($rateService);
             $rate = $rateGetter->getRate($pair[0], $pair[1]);
             echo "Rate: {$rate}" . PHP_EOL;

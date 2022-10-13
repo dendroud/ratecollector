@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "858148e9a485dbc2ad988ca7fbfed549",
+    "content-hash": "74da7e8f66a203b66ea278cace3ccffb",
     "packages": [
         {
             "name": "codenix-sv/coingecko-api",
@@ -60,64 +60,6 @@
                 "source": "https://github.com/codenix-sv/coingecko-api"
             },
             "time": "2021-07-24T16:33:27+00:00"
-        },
-        {
-            "name": "cryptoapis/sdk",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Crypto-APIs/Crypto_APIs_2.0_SDK_PHP.git",
-                "reference": "134b2ac155e44f57db1d79f019dc4601495c5c4e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Crypto-APIs/Crypto_APIs_2.0_SDK_PHP/zipball/134b2ac155e44f57db1d79f019dc4601495c5c4e",
-                "reference": "134b2ac155e44f57db1d79f019dc4601495c5c4e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "ext-mbstring": "*",
-                "guzzlehttp/guzzle": "^6.5.8",
-                "php": "^7.3 || ^8.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.12",
-                "phpunit/phpunit": "^8.0 || ^9.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CryptoAPIs\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "CryptoAPIs",
-                    "homepage": "https://cryptoapis.io/"
-                }
-            ],
-            "description": "Crypto APIs is a complex and innovative infrastructure layer that radically simplifies the development of any Blockchain and Crypto related applications. Organized around REST, Crypto APIs 2.0 can assist both novice Bitcoin/Ethereum enthusiasts and crypto experts with the development of their blockchain applications. Crypto APIs 2.0 provides unified endpoints and data, raw data, automatic tokens and coins forwardings, callback functionalities, and much more.",
-            "homepage": "https://github.com/Crypto-APIs/Crypto_APIs_2.0_SDK_PHP#readme",
-            "keywords": [
-                "api",
-                "blockchain",
-                "cryptiapis",
-                "crypto",
-                "php",
-                "rest",
-                "sdk"
-            ],
-            "support": {
-                "issues": "https://github.com/Crypto-APIs/Crypto_APIs_2.0_SDK_PHP/issues",
-                "source": "https://github.com/Crypto-APIs/Crypto_APIs_2.0_SDK_PHP/tree/v1.7.0"
-            },
-            "time": "2022-09-12T15:52:17+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
