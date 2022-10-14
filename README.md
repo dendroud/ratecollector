@@ -18,7 +18,7 @@ Install dependecies:
 ```sh
 #sudo docker compose exec php php -f composer.phar install
 ```
-
+## Starting
 Start script:
 ```sh
 #sudo docker compose exec php php -f leakprotect.php
