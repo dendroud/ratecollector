@@ -28,7 +28,7 @@ Start script:
 
 For creation of DB dump into dbdumps dir:
 ```sh
-#sudo docker compose exec postgres sh -c "PGPASSWORD="admin" pg_dump -h localhost -U admin -s coin > /dbdumps/coin.sql"
+#sudo docker compose exec postgres sh -c "PGPASSWORD="admin" pg_dump -h localhost -U admin -s coin > /dbdumps/schema.sql"
 ```
 Access to pgadmin: http://localhost:5050
 
