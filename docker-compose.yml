@@ -26,8 +26,8 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@domain.com
       - PGADMIN_DEFAULT_PASSWORD=admin
-    volumes:
-      - ./db/pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgres
  
   php:
     container_name: php
