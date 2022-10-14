@@ -24,10 +24,6 @@ Start script:
 #sudo docker compose exec php php -f leakprotect.php
 ```
 
-Second and later starts if docker compose runed, run only:
-```sh
-#sudo docker compose exec php php -f leakprotect.php
-```
 ## Database
 
 For creation of DB dump into dbdumps dir:
