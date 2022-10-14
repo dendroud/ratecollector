@@ -1,14 +1,18 @@
-https://bitquery.io/pricing - дорого
-https://crypto.com - нет апи
-https://docs.cex.io/#cex-io-api-introduction - нет пары XMR/USD https://cex.io/api/currency_limits
-https://swapzone.io - лимиты не обнаружены, нормальные отзыв,требует указания суммы обмена, 1 может не подходить
-https://simpleswap.io/ - лимиты не обнаружены
-https://www.coinapi.io/Pricing - дорого
-https://min-api.cryptocompare.com/pricing - дорого
-https://bitpay.com - платный, цены не опубликованы
-https://nownodes.io/pricing - не открывается доументация, цены хорошие
-https://cryptoapis.io/pricing - дорого
-https://nomics.com/ - жду ключ
-https://docs.coincap.io - в апи рейты только к usd, но есть свечи на крайний случай
-https://api.binance.com - проблема с рейтами к usd https://api.binance.com/api/v3/ticker/price?symbol=ETHUSD
-https://www.kucoin.com - подходит
+https://bitquery.io/pricing - expensive
+https://crypto.com - no API
+https://docs.cex.io/#cex-io-api-introduction - no pair XMR/USD https://cex.io/api/currency_limits
+https://swapzone.io - require amount for getting rate, 1 not allowed sometimes
+https://simpleswap.io/ - limits not found
+https://www.coinapi.io/Pricing - expensive
+https://min-api.cryptocompare.com/pricing - expensive
+https://bitpay.com - prices not found
+https://nownodes.io/pricing - API documentation not opened
+https://cryptoapis.io/pricing - expensive
+https://nomics.com/ - no sent key
+https://docs.coincap.io - in API rates only for usd, but posible to use candles
+https://api.binance.com - problem with usd rates example: https://api.binance.com/api/v3/ticker/price?symbol=ETHUSD
+https://www.kucoin.com - normal, but long authorization for test task
+https://api.coinbase.com/v2/exchange-rates?currency=BTC - no XMR
+https://www.hotbit.io/support?page=api no API
+https://www.gate.io/docs/developers/apiv4/en/#pagination - no XMR/USD https://api.gateio.ws/api/v4/spot/currency_pairs
+https://kraken.com sometime have failures, but have XMR and working
