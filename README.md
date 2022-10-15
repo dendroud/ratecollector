@@ -14,7 +14,7 @@ Start docker compose:
 ```sh
 #sudo docker compose up -d
 ```
-Install dependecies:
+Install dependencies:
 ```sh
 #sudo docker compose exec php php -f composer.phar install
 ```
