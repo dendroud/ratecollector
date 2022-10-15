@@ -28,10 +28,10 @@ class RateProcessor {
     protected $dbConfig = null;
 
     /**
-     * PgSql\Connection instance on success, or false on failure
+     * Redis instance on success, or false on failure
      * @internal
-     * @var PgSql\Connection|false 
-     */
+     * @var Redis
+     */ 
     protected $redis = null;
 
     function __construct() {
