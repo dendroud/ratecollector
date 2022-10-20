@@ -1,4 +1,2 @@
-db/pgsql
-db/pgadmin
-nbproject
-code/vendor
+config.ini
+/vendor/**/.git
