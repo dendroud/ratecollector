@@ -9,7 +9,7 @@ Clone the repository
 Project it is ready for use with little configuration
 ```sh
 1.Copy or rename sample.config.ini to config.ini and set correct database credentials
-2.Use schema.sql for create rate table in youre database
+2.Use schema.sql for creating rate table in your database
 ```
 
 ## Starting
