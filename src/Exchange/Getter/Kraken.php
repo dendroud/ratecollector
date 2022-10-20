@@ -16,7 +16,6 @@ class Kraken extends RateExchange implements RateExchangeService {
         
     }
 
-    
     /**
      * {@inheritdoc }
      * @param string $currName1
@@ -28,7 +27,11 @@ class Kraken extends RateExchange implements RateExchangeService {
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
+        if (!$curl) {
+            throw new \Exception("Rate not received. Currencies: {$currName1}, {$currName2}. Error: curl_init returned false");
+        }
+
+        $curlSetopt = curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.kraken.com/0/public/Ticker?pair={$currName1}{$currName2}",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
@@ -39,7 +42,15 @@ class Kraken extends RateExchange implements RateExchangeService {
             CURLOPT_CUSTOMREQUEST => 'GET',
         ));
 
+        if (!$curlSetopt) {
+            throw new \Exception("Rate not received. Currencies: {$currName1}, {$currName2}. Error: curl_setopt_array returned false");
+        }
+
         $response = curl_exec($curl);
+
+        if (!$response) {
+            throw new \Exception("Rate not received. Currencies: {$currName1}, {$currName2}. Error: curl_exec returned false");
+        }
 
         curl_close($curl);
 
