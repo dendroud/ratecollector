@@ -16,6 +16,20 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -25,7 +39,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.rate (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     value real,
     created timestamp with time zone DEFAULT now(),
     provider character varying(20),
@@ -37,11 +51,33 @@ CREATE TABLE public.rate (
 ALTER TABLE public.rate OWNER TO admin;
 
 --
+-- Data for Name: rate; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.rate (id, value, created, provider, cur1, cur2) FROM stdin;
+\.
+
+
+--
 -- Name: rate rate_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
 ALTER TABLE ONLY public.rate
     ADD CONSTRAINT rate_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: Rates; Type: INDEX; Schema: public; Owner: admin
+--
+
+CREATE INDEX "Rates" ON public.rate USING btree (value);
+
+
+--
+-- Name: INDEX "Rates"; Type: COMMENT; Schema: public; Owner: admin
+--
+
+COMMENT ON INDEX public."Rates" IS 'Index for rates';
 
 
 --

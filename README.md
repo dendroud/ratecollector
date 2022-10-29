@@ -1,25 +1,36 @@
-Currency rate receiver
+
+
 ## Installation
+Currency rate receiver
+Project it is ready for use without configuration
+
+First start of project:
 Clone the repository
 ```sh
 #git clone https://github.com/dendroud/ratecollector.git
 #cd ratecollector
 ```
-
-Project it is ready for use with little configuration
+Start docker compose:
 ```sh
-1.Copy or rename sample.config.ini to config.ini and set correct database credentials
-2.Use schema.sql for creating rate table in your database
+#sudo docker compose up -d
 ```
-
+Install dependencies:
+```sh
+#sudo docker compose exec php php -f composer.phar install
+```
 ## Starting
 Start script:
 ```sh
-#php -f leakprotect.php
+#sudo docker compose exec php php -f leakprotect.php
 ```
+
+## Database
+
+For creation of DB dump into dbdumps dir:
+```sh
+#sudo docker compose exec postgres sh -c "PGPASSWORD="admin" pg_dump -h localhost -U admin -s coin > /dbdumps/schema.sql"
+```
+Access to pgadmin: http://localhost:5050
 
 ## Other
 Results of research of currency exchange services in "exchangers" file
-
-## Pairs order
-Pairs requesting from provider in recorded order. For example BTC/USD return how mach USD cost 1 BTC

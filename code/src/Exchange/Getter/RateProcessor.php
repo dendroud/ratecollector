@@ -4,8 +4,7 @@ namespace Bot\Exchange\Getter;
 
 use Bot\Exchange\Getter\Config;
 use Bot\Exchange\Getter\RateGetter;
-use Bot\Exchange\Getter\CoinGecko;
-use Bot\Exchange\Getter\Kraken;
+use Redis;
 
 /**
  * RateProcessor class
@@ -28,18 +27,25 @@ class RateProcessor {
      */
     protected $dbConfig = null;
 
+    /**
+     * PgSql\Connection instance on success, or false on failure
+     * @internal
+     * @var PgSql\Connection|false 
+     */
+    protected $redis = null;
+
     function __construct() {
         $this->dbConfig = Config::getDb();
+        $this->redis = new Redis();
     }
 
     /**
-     * Return class name by provider config name 
-     * @param string $name
-     * @return string|bool
+     * Connect to cache service 
      */
-    protected function getClassNameForProvider(string $name): string|bool {
-        return class_exists(__NAMESPACE__ . '\\' . $name) ? __NAMESPACE__ . '\\' . $name : false;
-    }  
+    protected function cacheConnect() {
+        $redisConf = Config::getRedis();
+        $this->redis->connect($redisConf['server'], $redisConf['port']);
+    }
 
     /**
      * Connect to database 
@@ -51,13 +57,49 @@ class RateProcessor {
     }
 
     /**
+     * Save rate into cache
+     * @param string $key
+     * @param float $value
+     */
+    protected function cacheRate(string $key, float $value) {
+        if ($this->redis->ping()) {
+            try {
+                $this->redis->set($key, $value);
+            } catch (RedisException $ex) {
+                echo 'Redis set exception:' . PHP_EOL;
+                echo $ex->getTraceAsString() . PHP_EOL;
+                echo $ex->getMessage() . PHP_EOL;
+            }
+        } else {
+            echo "Redis is not connected" . PHP_EOL;
+        }
+    }
+
+    /**
+     * Combine cache key by input parameters
+     * @param string $provider
+     * @param string $curr1
+     * @param string $curr2
+     * @return string cache key
+     */
+    public static function calcRateCacheKey(string $provider, string $curr1, string $curr2): string {
+        return "{$provider}:{$curr1}:{$curr2}";
+    }
+
+    /**
      * Loop for processing API endpoints
      */
     public function processProviders() {
         $endpoints = Config::getApis();
 
+        $this->cacheConnect();
+
         foreach ($endpoints as $provider => $api) {
             $this->processProvider($provider, $api);
+        }
+
+        if ($this->redis) {
+            $this->redis->close();
         }
     }
 
@@ -68,6 +110,19 @@ class RateProcessor {
      * @return bool  true if rates saved into DB othervice false
      */
     public function processProvider(string $provider, array $api): bool {
+        $sqlRateBulkResults = [];
+        $pairs = str_getcsv($api['pairs']);
+        foreach ($pairs as $pair) {
+            $currencies = explode('/', $pair);
+            $rate = $this->processRate($provider, $api, $currencies);
+
+            if ($rate) {
+                $cacheKey = self::calcRateCacheKey($provider, $currencies[0], $currencies[1]);
+                $this->cacheRate($cacheKey, $rate);
+                $sqlRateBulkResults[] = "('{$provider}', '{$currencies[0]}', '{$currencies[1]}','{$rate}')";
+            }
+        }
+
         //open DB connection
         if (!$this->dbConnect()) {
             echo 'DB connection error. DB config:' . PHP_EOL;
@@ -75,18 +130,10 @@ class RateProcessor {
             return false;
         }
 
-        $pairs = str_getcsv($api['pairs']);
         $saveRes = true;
-        foreach ($pairs as $pair) {
-            $currencies = explode('/', $pair);
-            $rate = $this->processRate($provider, $api, $currencies);
-            if ($rate) {
-                $rateArr = ['provider' => $provider, 'cur1' => $currencies[0], 'cur2' => $currencies[1], 'rate' => $rate];
-                if (!$this->saveRate($rateArr)) {
-                    //return false for provider even if not saved one rate
-                    $saveRes = false;
-                }
-            }
+        //if rates present then save it into DB
+        if (count($sqlRateBulkResults)) {
+            $saveRes = $this->saveRates(join(',', $sqlRateBulkResults));
         }
 
         pg_close($this->dbConnection);
@@ -102,15 +149,13 @@ class RateProcessor {
      * @return float|bool rate value or false
      */
     public function processRate(string $apiName, array $config, array $pair): float|bool {
-        echo "Request rate for {$pair[0]}, {$pair[1]} for {$apiName}" . PHP_EOL;
+        echo "Request rate for {$pair[0]}, {$pair[1]} in {$config['class_name']}" . PHP_EOL;
 
         try {
-            $className = $this->getClassNameForProvider($apiName);
-            if (!$className) {
-                throw new \Exception("Rate not received. Currencies: {$pair[0]}, {$pair[1]}. Error: not found class name {$apiName}");
-            }
+            $className = $config['class_name'];
             $rateService = new $className($config);
-            $rate = $rateService->getRate($pair[0], $pair[1]);
+            $rateGetter = new RateGetter($rateService);
+            $rate = $rateGetter->getRate($pair[0], $pair[1]);
             echo "Rate: {$rate}" . PHP_EOL;
             return $rate;
         } catch (\Exception $exc) {
@@ -122,13 +167,13 @@ class RateProcessor {
     }
 
     /**
-     * Save rate into DB
-     * @param array $rate rate with parameters like ['provider' => $provider, 'cur1' => $currencies[0], 'cur2' => $currencies[1], 'rate' => $rate]
+     * Save rates into DB
+     * @param string $sqlValues SQL prepared values for bulk insert
      * @return bool
      */
-    public function saveRate(array $rate): bool {
-        $sql = "INSERT INTO rate (provider, cur1, cur2, value) VALUES ($1, $2, $3, $4)";
-        $res = pg_query_params($this->dbConnection, $sql, [$rate['provider'], $rate['cur1'], $rate['cur2'], $rate['rate']]);
+    public function saveRates(string $sqlValues): bool {
+        $sql = "INSERT INTO rate (provider, cur1, cur2, value) VALUES {$sqlValues}";
+        $res = pg_query($this->dbConnection, $sql);
         if (!$res) {
             echo "Can't execute query: {$sql}" . PHP_EOL;
             return false;
